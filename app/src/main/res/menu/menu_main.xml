@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_main_clear_history"
+        android:title="@string/menu_main_clear_history_title"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_main_filter"
+        android:title="Filter"
+        app:showAsAction="always|withText"/>
+
+    <item
+        android:id="@+id/menu_main_search"
+        android:title="@string/menu_main_search_title"
+        android:icon="@drawable/ic_search"
+        android:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom"/>
+</menu>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">OKCupid</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="drawer_open">Open drawer</string>
+    <string name="drawer_close">Close drawer</string>
+    <string name="menu_main_clear_history_title">Clear Search History</string>
+    <string name="menu_main_search_title">Search</string>
+</resources>
