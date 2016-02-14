@@ -6,6 +6,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_grid_fragment"/>
+        android:text="@string/hello_nearby_fragment"/>
 
 </FrameLayout>

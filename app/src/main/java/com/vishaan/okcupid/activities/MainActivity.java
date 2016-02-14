@@ -1,11 +1,12 @@
-package com.vishaan.okcupid;
+package com.vishaan.okcupid.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.vishaan.okcupid.R;
+import com.vishaan.okcupid.adapters.TabPagerAdapter;
+import com.vishaan.okcupid.fragments.BookmarksFragment;
 import com.vishaan.okcupid.fragments.GridFragment;
+import com.vishaan.okcupid.fragments.NearbyFragment;
 
 /**
  * Main Activity class, which displays a grid view
@@ -24,11 +29,27 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Main Activity Title
      */
-    private final static String APP_BAR_TITLE = "Browse Matches";
+    private static final String APP_BAR_TITLE = "Browse Matches";
+
+    /**
+     * Tab titles
+     */
+    private static final String[] tabTitles = new String[]{"SEARCH", "NEARBY", "BOOKMARKS"};
+
     /**
      * App bar
      */
     private Toolbar mToolbar;
+
+    /**
+     * Tab Layout
+     */
+    private TabLayout mTabLayout;
+
+    /**
+     * View Pager, to be used with tabs layout
+     */
+    private ViewPager mViewPager;
 
     /**
      * Drawer Layout
@@ -50,16 +71,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initialize();
-
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.fragment_grid_container);
-
-        if (fragment == null) {
-            fragment = GridFragment.newInstance();
-            fm.beginTransaction()
-                    .add(R.id.fragment_grid_container, fragment)
-                    .commit();
-        }
     }
 
     @Override
@@ -70,13 +81,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Initialize member variables
+     * Initialize member variables and set up
      */
     private void initialize() {
         //set up the toolbar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(APP_BAR_TITLE);
+
+        //set up the viewpager
+        mViewPager = (ViewPager) findViewById(R.id.viewpager_main);
+        TabPagerAdapter pagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
+        pagerAdapter.setTitles(tabTitles);
+        pagerAdapter.setFragments(
+                new Fragment[]{
+                        GridFragment.newInstance(),
+                        NearbyFragment.newInstance(),
+                        BookmarksFragment.newInstance()
+                });
+
+        mViewPager.setAdapter(pagerAdapter);
+
+        //set up the tabs to interact with viewpager
+        mTabLayout = (TabLayout) findViewById(R.id.tabs_main);
+        mTabLayout.setupWithViewPager(mViewPager);
 
         //set up the navigation drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_container);
