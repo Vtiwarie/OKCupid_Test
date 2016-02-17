@@ -21,10 +21,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".services.UserUpdateService"
-            android:exported="false">
-        </service>
     </application>
 
 </manifest>

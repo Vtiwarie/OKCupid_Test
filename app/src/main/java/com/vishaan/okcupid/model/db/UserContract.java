@@ -8,7 +8,6 @@ public class UserContract {
     public static final String TABLE_NAME = "tbl_user";
 
     public static final class Columns {
-        public static final String ID = "id";
         public static final String ENEMY = "enemy";
         public static final String RELATIVE = "relative";
         public static final String LAST_LOGIN = "last_login";
@@ -24,7 +23,7 @@ public class UserContract {
         public static final String FRIEND = "friend";
         public static final String IS_ONLINE = "is_online";
         public static final String USERNAME = "username";
-        public static final String SPOTLIGHT_COLOR = "stoplight_color";
+        public static final String STOPLIGHT_COLOR = "stoplight_color";
         public static final String LAST_CONTACT_TIME = "last_contact_time";
         public static final String ORIENTATION_TAGS = "orientation_tags";
     }

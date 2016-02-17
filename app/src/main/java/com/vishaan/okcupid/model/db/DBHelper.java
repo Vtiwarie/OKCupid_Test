@@ -37,13 +37,12 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String sql = "CREATE TABLE IF NOT EXISTS " + UserContract.TABLE_NAME + " (" +
-                UserContract.Columns.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                UserContract.Columns.USER_ID + " TEXT PRIMARY KEY ON CONFLICT REPLACE, " +
                 UserContract.Columns.ENEMY + " INTEGER NOT NULL, " +
                 UserContract.Columns.RELATIVE + " INTEGER NOT NULL, " +
                 UserContract.Columns.LAST_LOGIN + " INTEGER NOT NULL, " +
                 UserContract.Columns.GENDER + " INTEGER NOT NULL, " +
                 UserContract.Columns.LOCATION + " TEXT NOT NULL, " +
-                UserContract.Columns.USER_ID + " INTEGER UNIQUE NOT NULL, " +
                 UserContract.Columns.MATCH + " INTEGER NOT NULL, " +
                 UserContract.Columns.GENDER_TAGS + " TEXT DEFAULT NULL, " +
                 UserContract.Columns.LIKED + " INTEGER NOT NULL, " +
@@ -53,7 +52,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 UserContract.Columns.FRIEND + " INTEGER NOT NULL, " +
                 UserContract.Columns.IS_ONLINE + " INTEGER NOT NULL, " +
                 UserContract.Columns.USERNAME + " TEXT NOT NULL, " +
-                UserContract.Columns.SPOTLIGHT_COLOR + " TEXT NOT NULL, " +
+                UserContract.Columns.STOPLIGHT_COLOR + " TEXT DEFAULT NULL, " +
                 UserContract.Columns.LAST_CONTACT_TIME + " TEXT NOT NULL, " +
                 UserContract.Columns.ORIENTATION_TAGS + " TEXT NOT NULL " +
             ");";
