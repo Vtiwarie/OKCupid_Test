@@ -166,5 +166,97 @@ public class User {
     public String getUsername() {
         return username;
     }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setCityName(String city_name) {
+        this.city_name = city_name;
+    }
+
+    public void setCountryCode(String country_code) {
+        this.country_code = country_code;
+    }
+
+    public void setCountryName(String country_name) {
+        this.country_name = country_name;
+    }
+
+    public void setEnemy(int enemy) {
+        this.enemy = enemy;
+    }
+
+    public void setFriend(int friend) {
+        this.friend = friend;
+    }
+
+    public void setGender(int gender) {
+        this.gender = gender;
+    }
+
+    public void setGenderTags(List<String> gender_tags) {
+        this.gender_tags = gender_tags;
+    }
+
+    public void setIsOnline(int is_online) {
+        this.is_online = is_online;
+    }
+
+    public void setLastContactTime(List<Integer> last_contact_time) {
+        this.last_contact_time = last_contact_time;
+    }
+
+    public void setLastLogin(int last_login) {
+        this.last_login = last_login;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public void setMatch(int match) {
+        this.match = match;
+    }
+
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
+    }
+
+    public void setOrientationTags(List<String> orientation_tags) {
+        this.orientation_tags = orientation_tags;
+    }
+
+    public void setPhoto(Photo photo) {
+        this.photo = photo;
+    }
+
+    public void setRelative(long relative) {
+        this.relative = relative;
+    }
+
+    public void setStateCode(String state_code) {
+        this.state_code = state_code;
+    }
+
+    public void setStateName(String state_name) {
+        this.state_name = state_name;
+    }
+
+    public void setStoplightColor(String stoplight_color) {
+        this.stoplight_color = stoplight_color;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }
 

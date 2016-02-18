@@ -71,9 +71,6 @@ public class TestDB extends ApplicationTestCase<Application> {
         //assert that the table is not empty after insert
         assertTrue("Error: No records found: " + cursor.getCount(), cursor.moveToFirst());
 
-//        //validate that the record set found in the database matches the values inserted
-//        TestUtils.validateCurrentRecord("Error: Test data does not matches values in table", cursor, mUserInsertValues);
-
         cursor.close();
         db.close();
     }
@@ -92,6 +89,18 @@ public class TestDB extends ApplicationTestCase<Application> {
         assertTrue("Error: bulk insert failed.", count > 0);
         ds.close();
         Log.d(TAG, "Bulk insert count: " + count);
+    }
+
+
+    /**
+     * Test to retrieve all matched users from the database cache
+     */
+    public void testGetUsersFromDb() {
+        UserDataSource ds = new UserDataSource(getContext());
+        ds.open();
+        List<User> users = ds.getUsers();
+        assertTrue("Error: No users were returned.", users.size() > 0);
+        ds.close();
     }
 
     /**
