@@ -6,72 +6,72 @@ import java.util.List;
  * User class
  */
 public class User {
-    int enemy;
-    long relative;
-    int last_login;
-    int gender;
-    Location location;
-    String userid;
-    int match;
-    List<String> gender_tags;
-    boolean liked;
-    String state_code;
-    int orientation;
-    String country_name;
-    Photo photo;
-    String state_name;
-    int age;
-    String country_code;
-    int friend;
-    int is_online;
-    String username;
-    String city_name;
-    String stoplight_color;
-    List<Integer> last_contact_time;
-    List<String> orientation_tags;
+    public int enemy;
+    public long relative;
+    public int last_login;
+    public int gender;
+    public Location location;
+    public String userid;
+    public int match;
+    public List<String> gender_tags;
+    public boolean liked;
+    public String state_code;
+    public int orientation;
+    public String country_name;
+    public Photo photo;
+    public String state_name;
+    public int age;
+    public String country_code;
+    public int friend;
+    public int is_online;
+    public String username;
+    public String city_name;
+    public String stoplight_color;
+    public List<Integer> last_contact_time;
+    public List<String> orientation_tags;
 
     public static class Location {
-        String country_code;
-        String city_name;
-        String country_name;
-        String state_name;
-        String state_code;
+        public String country_code;
+        public String city_name;
+        public String country_name;
+        public String state_name;
+        public String state_code;
     }
 
     public static class Photo {
-        Full_Paths full_paths;
-        String base_path;
-        Original_Size original_size;
-        Crop_Rect crop_rect;
-        Thumb_Paths thumb_paths;
-        int ordinal;
-        String id;
-        String caption;
+        public Full_Paths full_paths;
+        public String base_path;
+        public Original_Size original_size;
+        public Crop_Rect crop_rect;
+        public Thumb_Paths thumb_paths;
+        public int ordinal;
+        public String id;
+        public String caption;
 
         public static class Full_Paths {
-            String large;
-            String small;
-            String medium;
-            String original;
+            public String large;
+            public String small;
+            public String medium;
+            public String original;
         }
 
         public static class Original_Size {
-            int width;
-            int height;
+            public int width;
+            public int height;
         }
 
         public static class Crop_Rect {
-            int height;
-            int y;
-            int width;
-            int x;
+            public int height;
+            public int y;
+            public int width;
+            public int x;
         }
 
         public static class Thumb_Paths {
-            String large;
-            String desktop_match;
-            String small;
-            String medium;
+            public String large;
+            public String desktop_match;
+            public String small;
+            public String medium;
         }
     }
 
