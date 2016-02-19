@@ -6,13 +6,13 @@ package com.vishaan.okcupid.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 /**
  * Pager Adapter class used to bind fragment views with the ViewPager
  * that is used with a tab layout.
  */
-public class TabPagerAdapter extends FragmentPagerAdapter {
+public class TabPagerAdapter extends FragmentStatePagerAdapter {
     /**
      * Array of fragments.  Use array instead of lists because size is fixed
      */

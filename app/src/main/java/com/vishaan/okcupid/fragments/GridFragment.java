@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.vishaan.okcupid.R;
 import com.vishaan.okcupid.adapters.GridFragmentAdapter;
@@ -41,6 +42,11 @@ public class GridFragment extends Fragment {
      * Swipe to refresh layout
      */
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    /**
+     * Reference to the "No connection" layout
+     */
+    private FrameLayout mNoConntectionLayout;
 
     /**
      * Recycler view adapter to control grid view presentation
@@ -88,15 +94,18 @@ public class GridFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //set up database handle and open connection
-        mUserDataSource = new UserDataSource(inflater.getContext());
-        mUserDataSource.open();
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_grid, container, false);
 
+        //set up database handle and open connection
+        mUserDataSource = new UserDataSource(view.getContext());
+        mUserDataSource.open();
+
+        //Grab a reference to the "No connected" frame layout to make it disappear/reappear depending on internet connection
+        mNoConntectionLayout = (FrameLayout) view.findViewById(R.id.frame_no_network_container);
+
         //set up recycler view
-        int spanCount = inflater.getContext().getResources().getInteger(R.integer.grid_span_count);
+        int spanCount = view.getContext().getResources().getInteger(R.integer.grid_span_count);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_grid_container);
         mGridLayoutManager = new GridLayoutManager(inflater.getContext(), spanCount);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
@@ -111,7 +120,9 @@ public class GridFragment extends Fragment {
             }
         });
 
+        //set up the initial UI
         updateUI();
+
         return view;
     }
 
@@ -145,17 +156,23 @@ public class GridFragment extends Fragment {
      * Redraw the UI
      */
     private void updateUI() {
-        if(mAdapter == null) {
+        if (mUsers.isEmpty()) {
             //if there are no users set for display, attempt to retrieve from database cache
-            if(mUsers.isEmpty()) {
-                mUsers = mUserDataSource.getUsers();
-            }
+            mUsers = mUserDataSource.getUsers();
             mAdapter = new GridFragmentAdapter(mUsers, getContext());
             mRecyclerView.setAdapter(mAdapter);
         } else {
             //notify that the adapter data set has changed and the UI should redraw itself
             mAdapter.setUsers(mUsers);
             mAdapter.notifyDataSetChanged();
+        }
+
+        if(mUsers.isEmpty()) {
+            //set the "No Connection Found" field to visible if no data can be retrieved
+            //neither from database cache nor web
+            mNoConntectionLayout.setVisibility(View.VISIBLE);
+        } else {
+            mNoConntectionLayout.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -175,7 +192,8 @@ public class GridFragment extends Fragment {
                     return users;
                 }
                 users = UserList.fromJSON(json);
-                Log.d(TAG, "User size: " + users.size());
+                //save users to database
+                mUserDataSource.bulkInsert(users);
             } catch (Exception e) {
                 Log.d(TAG, e.getMessage());
                 e.printStackTrace();

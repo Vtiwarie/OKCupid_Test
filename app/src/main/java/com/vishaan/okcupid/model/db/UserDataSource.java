@@ -79,7 +79,6 @@ public class UserDataSource extends AbstractDataSource {
         } finally {
             db.endTransaction();
         }
-
         return count;
     }
 
