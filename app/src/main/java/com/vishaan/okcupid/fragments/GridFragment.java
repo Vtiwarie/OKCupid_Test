@@ -172,6 +172,7 @@ public class GridFragment extends Fragment {
             //neither from database cache nor web
             mNoConntectionLayout.setVisibility(View.VISIBLE);
         } else {
+            //remove the field when data is found
             mNoConntectionLayout.setVisibility(View.INVISIBLE);
         }
     }
