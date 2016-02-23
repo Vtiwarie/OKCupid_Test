@@ -41,7 +41,7 @@ public class ImageViewLoader {
     /**
      * Object used to manage cache files
      */
-    private DiskCache mDiskCachefileCache;
+    private DiskCache mDiskCache;
 
     /**
      * Number of threads to execute simultaneously
@@ -59,7 +59,7 @@ public class ImageViewLoader {
     private static final int placeholderId = android.R.drawable.ic_lock_idle_lock;
 
     public ImageViewLoader(Context context) {
-        mDiskCachefileCache = new DiskCache(context);
+        mDiskCache = new DiskCache(context);
         mExecutorService = Executors.newFixedThreadPool(NUM_THREADS);
     }
 
@@ -95,7 +95,7 @@ public class ImageViewLoader {
      */
     private Bitmap generateBitmap(String url) {
         //first attempt to retrieve from cache
-        File file = mDiskCachefileCache.getCacheFile(url);
+        File file = mDiskCache.getCacheFile(url);
         Bitmap bitmap = resizeBitmap(file);
         if (bitmap != null) {
             return bitmap;

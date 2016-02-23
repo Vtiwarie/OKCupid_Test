@@ -46,7 +46,7 @@ public class GridFragment extends Fragment {
     /**
      * Reference to the "No connection" layout
      */
-    private FrameLayout mNoConntectionLayout;
+    private FrameLayout mNoConnectionLayout;
 
     /**
      * Recycler view adapter to control grid view presentation
@@ -102,7 +102,7 @@ public class GridFragment extends Fragment {
         mUserDataSource.open();
 
         //Grab a reference to the "No connected" frame layout to make it disappear/reappear depending on internet connection
-        mNoConntectionLayout = (FrameLayout) view.findViewById(R.id.frame_no_network_container);
+        mNoConnectionLayout = (FrameLayout) view.findViewById(R.id.frame_no_network_container);
 
         //set up recycler view
         int spanCount = view.getContext().getResources().getInteger(R.integer.grid_span_count);
@@ -170,10 +170,10 @@ public class GridFragment extends Fragment {
         if(mUsers.isEmpty()) {
             //set the "No Connection Found" field to visible if no data can be retrieved
             //neither from database cache nor web
-            mNoConntectionLayout.setVisibility(View.VISIBLE);
+            mNoConnectionLayout.setVisibility(View.VISIBLE);
         } else {
             //remove the field when data is found
-            mNoConntectionLayout.setVisibility(View.INVISIBLE);
+            mNoConnectionLayout.setVisibility(View.INVISIBLE);
         }
     }
 
