@@ -44,6 +44,11 @@ public class ImageViewLoader {
     private DiskCache mDiskCachefileCache;
 
     /**
+     * Number of threads to execute simultaneously
+     */
+    private static int NUM_THREADS = 10;
+
+    /**
      * Hash map to store image view references
      */
     private Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
@@ -55,7 +60,7 @@ public class ImageViewLoader {
 
     public ImageViewLoader(Context context) {
         mDiskCachefileCache = new DiskCache(context);
-        mExecutorService = Executors.newSingleThreadExecutor();
+        mExecutorService = Executors.newFixedThreadPool(NUM_THREADS);
     }
 
     /**
@@ -66,13 +71,8 @@ public class ImageViewLoader {
      */
     public void DisplayImage(String url, ImageView imageView) {
         imageViews.put(imageView, url);
-        Bitmap bitmap = null;
-        if (bitmap != null)
-            imageView.setImageBitmap(bitmap);
-        else {
-            startLoaderThread(url, imageView);
-            imageView.setImageResource(placeholderId);
-        }
+        imageView.setImageResource(placeholderId);
+        startLoaderThread(url, imageView);
     }
 
     /**
@@ -82,12 +82,12 @@ public class ImageViewLoader {
      * @param imageView to load the image on
      */
     private void startLoaderThread(String url, ImageView imageView) {
-        PhotoLoader p = new PhotoLoader(url, imageView);
-        mExecutorService.submit(new PhotosLoader(p));
+        PhotoLoader photoLoader = new PhotoLoader(url, imageView);
+        mExecutorService.submit(new PhotosLoaderRunnable(photoLoader));
     }
 
     /**
-     * Generates a mBitmap using the url, either as a key to retrieve
+     * Generates a mBitmap using the mUrl, either as a key to retrieve
      * the cache file, or to load the image view from the web
      *
      * @param url
@@ -97,8 +97,9 @@ public class ImageViewLoader {
         //first attempt to retrieve from cache
         File file = mDiskCachefileCache.getCacheFile(url);
         Bitmap bitmap = resizeBitmap(file);
-        if (bitmap != null)
+        if (bitmap != null) {
             return bitmap;
+        }
 
         //if image is not cached, attempt to retrieve from the web
         return getBitmapFromWeb(url, file);
@@ -136,23 +137,32 @@ public class ImageViewLoader {
      */
     private Bitmap resizeBitmap(File file) {
         try {
-            //decode image size
             BitmapFactory.Options options = new BitmapFactory.Options();
+            //just decode the bounds without having to load the bitmap and waste memory
             options.inJustDecodeBounds = true;
             BitmapFactory.decodeStream(new FileInputStream(file), null, options);
 
-            //Find the scale value using the power of 2
+            //set maximum required size in pixels that the image can be before it gets scaled
             final int REQUIRED_SIZE = 500;
-            int width = options.outWidth, height = options.outHeight;
+
+            //width and height of bitmap without scaling
+            int width = options.outWidth;
+            int height = options.outHeight;
+
+            //scale value
             int scale = 1;
+
+            //Find the scale value using the power of 2
             while (true) {
-                if (width / 2 < REQUIRED_SIZE || height / 2 < REQUIRED_SIZE)
+                if (width / 2 < REQUIRED_SIZE || height / 2 < REQUIRED_SIZE) {
                     break;
+                }
                 width /= 2;
                 height /= 2;
                 scale *= 2;
             }
 
+            //return scaled image
             BitmapFactory.Options options2 = new BitmapFactory.Options();
             options2.inSampleSize = scale;
             return BitmapFactory.decodeStream(new FileInputStream(file), null, options2);
@@ -165,55 +175,56 @@ public class ImageViewLoader {
 
     //Class for loading images
     private class PhotoLoader {
-        public String url;
-        public ImageView imageView;
+        public String mUrl;
+        public ImageView mImageView;
 
         public PhotoLoader(String url, ImageView imageView) {
-            this.url = url;
-            this.imageView = imageView;
+            mUrl = url;
+            mImageView = imageView;
         }
     }
 
     //generate the mBitmap and update the UI thread
-    private class PhotosLoader implements Runnable {
+    private class PhotosLoaderRunnable implements Runnable {
         PhotoLoader mPhotoLoader;
 
-        PhotosLoader(PhotoLoader photoToLoad) {
+        PhotosLoaderRunnable(PhotoLoader photoToLoad) {
             mPhotoLoader = photoToLoad;
         }
 
         @Override
         public void run() {
+            //if the image was already loaded for this view, return
             if (isImageViewReused(mPhotoLoader)) {
                 return;
             }
-            Bitmap bmp = generateBitmap(mPhotoLoader.url);
-            if (isImageViewReused(mPhotoLoader)) {
-                return;
-            }
-            ImageDisplay imageDisplay = new ImageDisplay(bmp, mPhotoLoader);
-            Activity activity = (Activity) mPhotoLoader.imageView.getContext();
+
+            //retrieve the bitmap, either from cache or the web API
+            Bitmap bitmap = generateBitmap(mPhotoLoader.mUrl);
+
+            //display the image on the UI thread
+            ImageDisplayRunnable imageDisplay = new ImageDisplayRunnable(bitmap, mPhotoLoader);
+            Activity activity = (Activity) mPhotoLoader.mImageView.getContext();
             activity.runOnUiThread(imageDisplay);
         }
     }
 
     //Used to display mBitmap in the UI thread
-    private class ImageDisplay implements Runnable {
+    private class ImageDisplayRunnable implements Runnable {
         Bitmap mBitmap;
         PhotoLoader mPhotoLoader;
 
-        public ImageDisplay(Bitmap bitmap, PhotoLoader photoLoader) {
+        public ImageDisplayRunnable(Bitmap bitmap, PhotoLoader photoLoader) {
             mBitmap = bitmap;
             mPhotoLoader = photoLoader;
         }
 
         public void run() {
-            if (isImageViewReused(mPhotoLoader))
-                return;
-            if (mBitmap != null)
-                mPhotoLoader.imageView.setImageBitmap(mBitmap);
-            else
-                mPhotoLoader.imageView.setImageResource(placeholderId);
+            if (mBitmap != null) {
+                mPhotoLoader.mImageView.setImageBitmap(mBitmap);
+            } else {
+                mPhotoLoader.mImageView.setImageResource(placeholderId);
+            }
         }
     }
 
@@ -224,8 +235,8 @@ public class ImageViewLoader {
      * @return boolean
      */
     boolean isImageViewReused(PhotoLoader photoToLoad) {
-        String tag = imageViews.get(photoToLoad.imageView);
-        if (tag == null || !tag.equals(photoToLoad.url)) {
+        String tag = imageViews.get(photoToLoad.mImageView);
+        if (tag == null || !tag.equals(photoToLoad.mUrl)) {
             return true;
         }
         return false;

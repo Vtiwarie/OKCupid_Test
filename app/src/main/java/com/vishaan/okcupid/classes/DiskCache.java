@@ -16,8 +16,9 @@ public class DiskCache {
 
     public DiskCache(Context context) {
         mDiskCache = context.getCacheDir();
-        if (!mDiskCache.exists())
+        if (!mDiskCache.exists()) {
             mDiskCache.mkdirs();
+        }
     }
 
     /**
@@ -29,6 +30,5 @@ public class DiskCache {
     public File getCacheFile(String url) {
         String filename = String.valueOf(url.hashCode());
         return new File(mDiskCache, filename);
-
     }
 }
